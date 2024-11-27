@@ -1,0 +1,16 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "dockerfile",
+        "use": "@vercel/docker"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/app/$1"
+      }
+    ]
+  }
+  
