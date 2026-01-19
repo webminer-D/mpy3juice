@@ -383,3 +383,16 @@ async def download_audio(url: str):
     except Exception as e:
         logger.error(f"General error: {str(e)}")
         return {"error": str(e)}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    
+    # Run the FastAPI server
+    uvicorn.run(
+        "msc:app",
+        host="0.0.0.0",
+        port=8050,
+        reload=True,
+        log_level="info"
+    )
