@@ -16,12 +16,29 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from audio_tools.router import router as audio_router
 from audio_tools.error_models import ErrorResponse, ErrorCode, create_error_response, get_http_status
 
-# Set up logging
+# Set up logging with enhanced configuration for debugging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),  # Console output
+        logging.FileHandler('backend.log', mode='a')  # File output (append mode)
+    ]
 )
 logger = logging.getLogger(__name__)
+
+# Set specific loggers to DEBUG for detailed troubleshooting
+logging.getLogger('audio_tools').setLevel(logging.DEBUG)
+logging.getLogger('audio_tools.ffmpeg_wrapper').setLevel(logging.DEBUG)
+logging.getLogger('audio_tools.router').setLevel(logging.DEBUG)
+
+# Log startup information
+logger.info("="*50)
+logger.info("Audio Toolkit API Starting Up")
+logger.info(f"Python version: {__import__('sys').version}")
+logger.info(f"Working directory: {__import__('os').getcwd()}")
+logger.info(f"Environment PATH: {__import__('os').environ.get('PATH', 'Not set')}")
+logger.info("="*50)
 
 
 # Lifespan context manager for startup/shutdown events

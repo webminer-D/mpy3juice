@@ -1,2 +1,90 @@
 INFO:     Will watch for changes in these directories: ['/Users/macproa2338/Projects/artemis_connect/mpyjuice/mpy3juice']
 ERROR:    [Errno 48] Address already in use
+2026-01-19 03:54:22,688 - __main__ - INFO - ==================================================
+2026-01-19 03:54:22,689 - __main__ - INFO - Audio Toolkit API Starting Up
+2026-01-19 03:54:22,689 - __main__ - INFO - Python version: 3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 11:23:37) [Clang 14.0.6 ]
+2026-01-19 03:54:22,689 - __main__ - INFO - Working directory: /Users/macproa2338/Projects/artemis_connect/mpyjuice/mpy3juice
+2026-01-19 03:54:22,689 - __main__ - INFO - Environment PATH: /opt/anaconda3/bin:/opt/anaconda3/condabin:/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.12/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/macproa2338/.kiro/extensions/ms-python.debugpy-2025.18.0-darwin-arm64/bundled/scripts/noConfigScripts
+2026-01-19 03:54:22,689 - __main__ - INFO - ==================================================
+2026-01-19 03:54:23,565 - __mp_main__ - INFO - ==================================================
+2026-01-19 03:54:23,565 - __mp_main__ - INFO - Audio Toolkit API Starting Up
+2026-01-19 03:54:23,565 - __mp_main__ - INFO - Python version: 3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 11:23:37) [Clang 14.0.6 ]
+2026-01-19 03:54:23,565 - __mp_main__ - INFO - Working directory: /Users/macproa2338/Projects/artemis_connect/mpyjuice/mpy3juice
+2026-01-19 03:54:23,565 - __mp_main__ - INFO - Environment PATH: /opt/anaconda3/bin:/opt/anaconda3/condabin:/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.12/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/macproa2338/.kiro/extensions/ms-python.debugpy-2025.18.0-darwin-arm64/bundled/scripts/noConfigScripts
+2026-01-19 03:54:23,565 - __mp_main__ - INFO - ==================================================
+2026-01-19 03:54:23,658 - msc - INFO - ==================================================
+2026-01-19 03:54:23,658 - msc - INFO - Audio Toolkit API Starting Up
+2026-01-19 03:54:23,658 - msc - INFO - Python version: 3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 11:23:37) [Clang 14.0.6 ]
+2026-01-19 03:54:23,658 - msc - INFO - Working directory: /Users/macproa2338/Projects/artemis_connect/mpyjuice/mpy3juice
+2026-01-19 03:54:23,658 - msc - INFO - Environment PATH: /opt/anaconda3/bin:/opt/anaconda3/condabin:/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.12/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/macproa2338/.kiro/extensions/ms-python.debugpy-2025.18.0-darwin-arm64/bundled/scripts/noConfigScripts
+2026-01-19 03:54:23,658 - msc - INFO - ==================================================
+2026-01-19 03:54:23,673 - msc - INFO - Running startup cleanup of old temporary files
+2026-01-19 03:54:23,674 - msc - INFO - Startup cleanup complete
+2026-01-19 03:54:23,751 - watchfiles.main - INFO - 4 changes detected
+2026-01-19 03:54:33,790 - audio_tools.router - INFO - Trim request: test_audio.mp3 from 0.5s to 1.5s
+2026-01-19 03:54:33,790 - audio_tools.router - INFO - Request details - Content-Type: application/octet-stream, Size: 16526
+2026-01-19 03:54:33,790 - audio_tools.validators - DEBUG - Validating audio file: test_audio.mp3
+2026-01-19 03:54:33,790 - audio_tools.validators - DEBUG - File extension: mp3
+2026-01-19 03:54:33,790 - audio_tools.validators - DEBUG - Reading file signature for test_audio.mp3
+2026-01-19 03:54:33,791 - audio_tools.validators - DEBUG - Original file position: 0
+2026-01-19 03:54:33,791 - audio_tools.validators - DEBUG - Read 8192 bytes for signature validation
+2026-01-19 03:54:33,791 - audio_tools.validators - DEBUG - Reset file position using file.seek()
+2026-01-19 03:54:33,791 - audio_tools.validators - DEBUG - Checking signature for format: mp3
+2026-01-19 03:54:33,791 - audio_tools.validators - DEBUG - Checking audio signature for format: mp3
+2026-01-19 03:54:33,791 - audio_tools.validators - DEBUG - Performing comprehensive MP3 signature check
+2026-01-19 03:54:33,791 - audio_tools.validators - DEBUG - Found ID3 tag at beginning
+2026-01-19 03:54:33,791 - audio_tools.validators - INFO - Audio file validated: test_audio.mp3 (mp3)
+2026-01-19 03:54:33,791 - audio_tools.validators - INFO - Time range validated: 0.5s - 1.5s
+2026-01-19 03:54:33,791 - audio_tools.router - INFO - Detected input format: mp3
+2026-01-19 03:54:33,791 - audio_tools.router - DEBUG - Reading uploaded file data...
+2026-01-19 03:54:33,791 - audio_tools.router - INFO - File data read successfully: 16526 bytes
+2026-01-19 03:54:33,792 - audio_tools.router - DEBUG - File header (hex): 49443304000000000022545353450000000e0000034c61766636322e332e3130
+2026-01-19 03:54:33,792 - audio_tools.router - INFO - Starting FFmpeg trimming operation...
+2026-01-19 03:54:33,795 - audio_tools.ffmpeg_wrapper - INFO - FFmpeg found at: ffmpeg
+2026-01-19 03:54:33,797 - audio_tools.ffmpeg_wrapper - INFO - Trimming audio from 0.5s to 1.5s (duration: 1.0s)
+2026-01-19 03:54:33,797 - audio_tools.ffmpeg_wrapper - INFO - Input format: mp3, Input size: 16526 bytes
+2026-01-19 03:54:33,797 - audio_tools.ffmpeg_wrapper - DEBUG - FFmpeg output format: mp3
+2026-01-19 03:54:33,797 - audio_tools.ffmpeg_wrapper - DEBUG - Attempting trim with codec copy: ffmpeg -i pipe:0 -ss 0.5 -t 1.0 -c copy -f mp3 pipe:1
+2026-01-19 03:54:33,797 - audio_tools.ffmpeg_wrapper - INFO - [2026-01-19T03:54:33.797572] Starting FFmpeg audio trimming (codec copy) (file: input.mp3) (input size: 16526 bytes)
+2026-01-19 03:54:33,797 - audio_tools.ffmpeg_wrapper - INFO - FFmpeg command: ffmpeg -i pipe:0 -ss 0.5 -t 1.0 -c copy -f mp3 pipe:1
+2026-01-19 03:54:33,797 - audio_tools.ffmpeg_wrapper - DEBUG - FFmpeg path: ffmpeg
+2026-01-19 03:54:33,797 - audio_tools.ffmpeg_wrapper - DEBUG - Working directory: /Users/macproa2338/Projects/artemis_connect/mpyjuice/mpy3juice
+2026-01-19 03:54:33,797 - audio_tools.ffmpeg_wrapper - DEBUG - Environment PATH: /opt/anaconda3/bin:/opt/anaconda3/condabin:/opt/homebrew/bin:/opt/homebrew/sbin:/Library/Frameworks/Python.framework/Versions/3.12/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/macproa2338/.kiro/extensions/ms-python.debugpy-2025.18.0-darwin-arm64/bundled/scripts/noConfigScripts
+2026-01-19 03:54:33,798 - audio_tools.ffmpeg_wrapper - DEBUG - Creating subprocess for FFmpeg audio trimming (codec copy)
+2026-01-19 03:54:33,804 - audio_tools.ffmpeg_wrapper - DEBUG - Subprocess created (PID: 93757), communicating with input data
+2026-01-19 03:54:33,891 - watchfiles.main - INFO - 3 changes detected
+2026-01-19 03:54:34,403 - audio_tools.ffmpeg_wrapper - DEBUG - Process completed with return code: 0
+2026-01-19 03:54:34,403 - audio_tools.ffmpeg_wrapper - DEBUG - FFmpeg stderr output (success):
+ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers
+  built with Apple clang version 17.0.0 (clang-1700.4.4.1)
+  configuration: --prefix=/opt/homebrew/Cellar/ffmpeg/8.0.1 --enable-shared --enable-pthreads --enable-version3 --cc=clang --host-cflags= --host-ldflags= --enable-ffplay --enable-gnutls --enable-gpl --enable-libaom --enable-libaribb24 --enable-libbluray --enable-libdav1d --enable-libharfbuzz --enable-libjxl --enable-libmp3lame --enable-libopus --enable-librav1e --enable-librist --enable-librubberband --enable-libsnappy --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtesseract --enable-libtheora --enable-libvidstab --enable-libvmaf --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxml2 --enable-libxvid --enable-lzma --enable-libfontconfig --enable-libfreetype --enable-frei0r --enable-libass --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libspeex --enable-libsoxr --enable-libzmq --enable-libzimg --disable-libjack --disable-indev=jack --enable-videotoolbox --enable-audiotoolbox --enable-neon
+  libavutil      60.  8.100 / 60.  8.100
+  libavcodec     62. 11.100 / 62. 11.100
+  libavformat    62.  3.100 / 62.  3.100
+  libavdevice    62.  1.100 / 62.  1.100
+  libavfilter    11.  4.100 / 11.  4.100
+  libswscale      9.  1.100 /  9.  1.100
+  libswresample   6.  1.100 /  6.  1.100
+[mp3 @ 0x138f14970] invalid concatenated file detected - using bitrate for duration
+Input #0, mp3, from 'pipe:0':
+  Metadata:
+    encoder         : Lavf62.3.100
+  Duration: N/A, start: 0.025057, bitrate: 64 kb/s
+  Stream #0:0: Audio: mp3 (mp3float), 44100 Hz, mono, fltp, 64 kb/s, start 0.025057
+Stream mapping:
+  Stream #0:0 -> #0:0 (copy)
+Output #0, mp3, to 'pipe:1':
+  Metadata:
+    TSSE            : Lavf62.3.100
+  Stream #0:0: Audio: mp3, 44100 Hz, mono, fltp, 64 kb/s
+[out#0/mp3 @ 0x139a191b0] video:0KiB audio:8KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.554086%
+size=       8KiB time=00:00:01.54 bitrate=  41.4kbits/s speed=6.59e+03x elapsed=0:00:00.00    
+
+2026-01-19 03:54:34,403 - audio_tools.ffmpeg_wrapper - INFO - [2026-01-19T03:54:34.403471] FFmpeg audio trimming (codec copy) completed successfully (file: input.mp3) (output size: 7985 bytes)
+2026-01-19 03:54:34,403 - audio_tools.router - INFO - Trimming completed successfully: 7985 bytes output
+2026-01-19 03:54:34,403 - audio_tools.validators - DEBUG - Sanitized filename: test_audio -> test_audio
+2026-01-19 03:54:34,403 - audio_tools.router - INFO - Trimming successful: test_audio_trimmed.mp3 (audio/mpeg)
+2026-01-19 03:54:34,475 - watchfiles.main - INFO - 1 change detected
+2026-01-19 03:54:37,561 - watchfiles.main - INFO - 1 change detected
+2026-01-19 03:54:40,789 - watchfiles.main - INFO - 1 change detected
+2026-01-19 03:54:41,079 - watchfiles.main - INFO - 2 changes detected

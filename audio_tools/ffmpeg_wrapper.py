@@ -83,6 +83,7 @@ class FFmpegWrapper:
             RuntimeError: If FFmpeg execution fails
         """
         from datetime import datetime
+        import os
         
         # Log operation start with timestamp and file information
         timestamp = datetime.now().isoformat()
@@ -93,20 +94,37 @@ class FFmpegWrapper:
             f"[{timestamp}] Starting FFmpeg {operation}{file_info} "
             f"(input size: {input_size} bytes)"
         )
-        logger.debug(f"FFmpeg command: {' '.join(command)}")
+        logger.info(f"FFmpeg command: {' '.join(command)}")
+        
+        # Log environment information for debugging GCP deployment
+        logger.debug(f"FFmpeg path: {self.ffmpeg_path}")
+        logger.debug(f"Working directory: {os.getcwd()}")
+        logger.debug(f"Environment PATH: {os.environ.get('PATH', 'Not set')}")
+        
+        # Check if FFmpeg is accessible
+        if not shutil.which(self.ffmpeg_path):
+            logger.error(f"FFmpeg not found in PATH: {self.ffmpeg_path}")
+            raise RuntimeError(f"FFmpeg not found at {self.ffmpeg_path}")
         
         try:
+            logger.debug(f"Creating subprocess for FFmpeg {operation}")
             process = subprocess.Popen(
                 command,
                 stdin=subprocess.PIPE if input_data else None,
                 stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE
+                stderr=subprocess.PIPE,
+                cwd=None,  # Use current working directory
+                env=None   # Use current environment
             )
+            
+            logger.debug(f"Subprocess created (PID: {process.pid}), communicating with input data")
             
             stdout, stderr = process.communicate(input=input_data, timeout=timeout)
             
             # Capture and log stderr output (Requirements: 12.3, 9.6)
             stderr_text = stderr.decode('utf-8', errors='ignore')
+            
+            logger.debug(f"Process completed with return code: {process.returncode}")
             
             if process.returncode != 0:
                 # Log detailed error information with timestamp and file context
@@ -115,11 +133,26 @@ class FFmpegWrapper:
                     f"[{end_timestamp}] FFmpeg {operation} failed{file_info} "
                     f"(return code: {process.returncode})"
                 )
+                logger.error(f"FFmpeg command that failed: {' '.join(command)}")
                 logger.error(f"FFmpeg stderr output:\n{stderr_text}")
                 
+                # Log input data information for debugging
+                if input_data:
+                    logger.error(f"Input data size: {len(input_data)} bytes")
+                    # Log first few bytes as hex for debugging (but not the whole file)
+                    hex_preview = input_data[:32].hex() if len(input_data) >= 32 else input_data.hex()
+                    logger.error(f"Input data preview (hex): {hex_preview}")
+                
                 # Extract meaningful error message from stderr
-                error_lines = [line for line in stderr_text.split('\n') if line.strip()]
+                error_lines = [line.strip() for line in stderr_text.split('\n') if line.strip()]
                 meaningful_error = error_lines[-1] if error_lines else "Unknown error"
+                
+                # Log the most relevant error lines
+                if len(error_lines) > 1:
+                    logger.error(f"Key error messages:")
+                    for line in error_lines[-3:]:  # Last 3 non-empty lines
+                        if line:
+                            logger.error(f"  {line}")
                 
                 raise RuntimeError(
                     f"FFmpeg {operation} failed: {meaningful_error}"
@@ -127,7 +160,7 @@ class FFmpegWrapper:
             
             # Log stderr even on success (FFmpeg outputs progress info to stderr)
             if stderr_text:
-                logger.debug(f"FFmpeg stderr output:\n{stderr_text}")
+                logger.debug(f"FFmpeg stderr output (success):\n{stderr_text}")
             
             # Log successful completion with timestamp and output size
             end_timestamp = datetime.now().isoformat()
@@ -146,6 +179,7 @@ class FFmpegWrapper:
                 f"[{end_timestamp}] FFmpeg {operation} timed out{file_info} "
                 f"(timeout: {timeout}s)"
             )
+            logger.error(f"Command that timed out: {' '.join(command)}")
             raise RuntimeError(f"Processing timed out after {timeout} seconds")
         
         except RuntimeError:
@@ -157,6 +191,8 @@ class FFmpegWrapper:
             logger.error(
                 f"[{end_timestamp}] FFmpeg {operation} execution error{file_info}: {str(e)}"
             )
+            logger.error(f"Command that caused error: {' '.join(command)}")
+            logger.error(f"Exception type: {type(e).__name__}")
             raise RuntimeError(f"FFmpeg execution failed: {str(e)}")
     
     def convert_format(
@@ -281,6 +317,19 @@ class FFmpegWrapper:
         """
         duration = end_time - start_time
         
+        # Enhanced logging for debugging
+        logger.info(f"Trimming audio from {start_time}s to {end_time}s (duration: {duration}s)")
+        logger.info(f"Input format: {input_format}, Input size: {len(input_data)} bytes")
+        
+        # Validate input parameters
+        if duration <= 0:
+            logger.error(f"Invalid duration: {duration}s (start: {start_time}s, end: {end_time}s)")
+            raise ValueError(f"Invalid time range: start_time ({start_time}) must be less than end_time ({end_time})")
+        
+        if start_time < 0:
+            logger.error(f"Invalid start_time: {start_time}s (must be >= 0)")
+            raise ValueError(f"start_time must be >= 0, got {start_time}")
+        
         # Map user-friendly format names to FFmpeg format names for piped I/O
         ffmpeg_format_map = {
             "mp3": "mp3",
@@ -292,8 +341,10 @@ class FFmpegWrapper:
         }
         
         ffmpeg_output_format = ffmpeg_format_map.get(input_format, input_format)
+        logger.debug(f"FFmpeg output format: {ffmpeg_output_format}")
         
-        command = [
+        # First, try with codec copy for efficiency
+        command_copy = [
             self.ffmpeg_path,
             "-i", "pipe:0",  # Read from stdin
             "-ss", str(start_time),  # Start time
@@ -304,19 +355,87 @@ class FFmpegWrapper:
         
         # Special handling for M4A/MP4 to support piped output
         if input_format == "m4a":
-            command.extend([
+            command_copy.extend([
                 "-movflags", "frag_keyframe+empty_moov",  # Enable fragmented MP4 for streaming
             ])
         
-        command.append("pipe:1")  # Write to stdout
+        command_copy.append("pipe:1")  # Write to stdout
         
-        logger.info(f"Trimming audio from {start_time}s to {end_time}s (duration: {duration}s)")
-        return self._execute_command(
-            command, 
-            input_data,
-            operation="audio trimming",
-            filename=f"input.{input_format}"
-        )
+        logger.debug(f"Attempting trim with codec copy: {' '.join(command_copy)}")
+        
+        try:
+            # Try codec copy first (faster, maintains quality)
+            return self._execute_command(
+                command_copy, 
+                input_data,
+                operation="audio trimming (codec copy)",
+                filename=f"input.{input_format}"
+            )
+        except RuntimeError as e:
+            logger.warning(f"Codec copy failed: {str(e)}")
+            logger.info("Falling back to re-encoding for trimming")
+            
+            # Fallback: re-encode the audio (slower but more compatible)
+            command_reencode = [
+                self.ffmpeg_path,
+                "-i", "pipe:0",  # Read from stdin
+                "-ss", str(start_time),  # Start time
+                "-t", str(duration),  # Duration
+            ]
+            
+            # Add format-specific encoding settings
+            if input_format == "mp3":
+                command_reencode.extend([
+                    "-codec:a", "libmp3lame",
+                    "-b:a", "192k",  # Maintain reasonable quality
+                ])
+            elif input_format == "wav":
+                command_reencode.extend([
+                    "-codec:a", "pcm_s16le",  # 16-bit PCM
+                ])
+            elif input_format == "flac":
+                command_reencode.extend([
+                    "-codec:a", "flac",
+                ])
+            elif input_format in ["aac", "m4a"]:
+                command_reencode.extend([
+                    "-codec:a", "aac",
+                    "-b:a", "192k",
+                ])
+            elif input_format == "ogg":
+                command_reencode.extend([
+                    "-codec:a", "libvorbis",
+                    "-q:a", "6",  # Quality level 6 (~192kbps)
+                ])
+            else:
+                # Default to MP3 encoding for unknown formats
+                command_reencode.extend([
+                    "-codec:a", "libmp3lame",
+                    "-b:a", "192k",
+                ])
+                ffmpeg_output_format = "mp3"
+                logger.info(f"Unknown format {input_format}, encoding as MP3")
+            
+            command_reencode.extend([
+                "-f", ffmpeg_output_format,  # Output format
+            ])
+            
+            # Special handling for M4A/MP4 to support piped output
+            if input_format == "m4a":
+                command_reencode.extend([
+                    "-movflags", "frag_keyframe+empty_moov",
+                ])
+            
+            command_reencode.append("pipe:1")  # Write to stdout
+            
+            logger.debug(f"Attempting trim with re-encoding: {' '.join(command_reencode)}")
+            
+            return self._execute_command(
+                command_reencode, 
+                input_data,
+                operation="audio trimming (re-encode)",
+                filename=f"input.{input_format}"
+            )
     
     def merge_audio(
         self,

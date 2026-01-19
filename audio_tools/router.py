@@ -174,6 +174,7 @@ async def trim_audio(
     import io
     
     logger.info(f"Trim request: {file.filename} from {start_time}s to {end_time}s")
+    logger.info(f"Request details - Content-Type: {file.content_type}, Size: {file.size if hasattr(file, 'size') else 'unknown'}")
     
     try:
         # Validate audio file
@@ -184,25 +185,41 @@ async def trim_audio(
         
         # Get input format from filename
         input_format = Path(file.filename or "").suffix.lower().lstrip(".")
+        logger.info(f"Detected input format: {input_format}")
         
         # Read file data
+        logger.debug("Reading uploaded file data...")
         file_data = await file.read()
+        logger.info(f"File data read successfully: {len(file_data)} bytes")
         
         # Check file size
         if len(file_data) > InputValidator.MAX_FILE_SIZE:
+            logger.error(f"File size exceeds limit: {len(file_data)} > {InputValidator.MAX_FILE_SIZE}")
             raise HTTPException(
                 status_code=413,
                 detail="File exceeds 100MB limit"
             )
         
+        # Log file header for debugging (first 32 bytes as hex)
+        if len(file_data) >= 32:
+            header_hex = file_data[:32].hex()
+            logger.debug(f"File header (hex): {header_hex}")
+        
         # Trim audio
+        logger.info("Starting FFmpeg trimming operation...")
         ffmpeg = FFmpegWrapper()
-        trimmed_data = ffmpeg.trim_audio(
-            input_data=file_data,
-            input_format=input_format,
-            start_time=start_time,
-            end_time=end_time
-        )
+        try:
+            trimmed_data = ffmpeg.trim_audio(
+                input_data=file_data,
+                input_format=input_format,
+                start_time=start_time,
+                end_time=end_time
+            )
+            logger.info(f"Trimming completed successfully: {len(trimmed_data)} bytes output")
+        except Exception as ffmpeg_error:
+            logger.error(f"FFmpeg trimming failed: {str(ffmpeg_error)}")
+            logger.error(f"Input parameters - format: {input_format}, start: {start_time}s, end: {end_time}s, size: {len(file_data)} bytes")
+            raise
         
         # Generate output filename
         original_name = Path(file.filename or "audio").stem
@@ -220,7 +237,7 @@ async def trim_audio(
         }
         mime_type = mime_types.get(input_format, "audio/mpeg")
         
-        logger.info(f"Trimming successful: {output_filename}")
+        logger.info(f"Trimming successful: {output_filename} ({mime_type})")
         
         # Return streaming response
         return StreamingResponse(
@@ -233,6 +250,8 @@ async def trim_audio(
         raise
     except Exception as e:
         logger.error(f"Trimming error: {str(e)}")
+        logger.error(f"Error type: {type(e).__name__}")
+        logger.error(f"Request context - file: {file.filename}, start: {start_time}, end: {end_time}")
         raise HTTPException(
             status_code=500,
             detail=f"Trimming failed: {str(e)}"
