@@ -8,13 +8,16 @@ WORKDIR /app
 RUN apk add --no-cache ffmpeg && \
     pip install --no-cache-dir --upgrade pip
 
-# Copy only the necessary files into the container at /app
-COPY msc.py requirements.txt /app/
+# Copy requirements first for better Docker layer caching
+COPY requirements.txt /app/
 
 # Install Python dependencies without cache to minimize size
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose port 8000 for FastAPI
+# Copy the entire application code
+COPY . /app/
+
+# Expose port 8050 for FastAPI
 EXPOSE 8050
 
 # Define environment variable (optional, for FastAPI)
