@@ -1,0 +1,12 @@
+# Testing framework dependencies for GCP endpoint testing
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+httpx>=0.24.0
+hypothesis>=6.70.0
+
+# Audio processing for test data generation
+pydub>=0.25.1
+
+# Additional utilities
+aiofiles>=23.0.0
+python-multipart>=0.0.6

@@ -185,14 +185,36 @@ app.add_middleware(RateLimitMiddleware, max_concurrent=10)
 # Requirements: 9.5, 11.3
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins, modify as needed for production
+    allow_origins=[
+        "https://www.mp3juices.sbs",
+        "https://mp3juices.sbs", 
+        "http://localhost:5179",
+        "http://localhost:3000",
+        "http://127.0.0.1:5179",
+        "http://127.0.0.1:3000",
+        "http://localhost:5173",  # Add Vite dev server default port
+        "http://127.0.0.1:5173"   # Add Vite dev server default port
+    ],  # Specific origins instead of wildcard when using credentials
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # Explicit methods
     allow_headers=["*"],  # Allow all headers
 )
 
 # Include audio tools router
 app.include_router(audio_router)
+
+
+# Simple session endpoint to prevent 404 errors
+@app.get("/api/session")
+async def get_session():
+    """
+    Simple session endpoint
+    Returns basic session info without authentication
+    """
+    return {
+        "authenticated": False,
+        "message": "Session authentication not implemented yet"
+    }
 
 
 # Global exception handlers
